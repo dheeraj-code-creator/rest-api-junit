@@ -2,6 +2,7 @@ package com.springboot.rest.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
@@ -13,9 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import com.springboot.rest.dto.UserDto;
 import com.springboot.rest.entity.User;
@@ -39,11 +38,34 @@ public class UserServiceTest {
 	private MockMvc mockMvc;
 	
 	@Before
-	public void setup() {
-		RequestContextHolder.setRequestAttributes(attrubutes);
-		this.mockMvc = MockMvcBuilders.standaloneSetup(userService).build();
+	public void setup() throws Exception {
+		// this line is too important for post and put endpoints
+		Mockito.when(converterService.convertToEntity(Mockito.any(UserDto.class))).thenReturn(new User());
 	}
 	
+	@Test
+	public void testForCreateNewUser() {
+		String userId = "111";
+		String userName = "First Demo";
+		User user = new User();
+		user.setUserId(userId);
+		user.setUserName(userName);
+		userRepository.saveAndFlush(user);
+		Assert.assertEquals("111", userId);
+	}
+	
+	@Test
+	public void testForupdateExistingUser() {
+		String userId = "222";
+		User user = new User();
+		user.setUserId("222");
+		user.setUserName("updated-user-name");
+		Mockito.when(userRepository.findById(userId)).thenReturn(Optional.ofNullable(user));
+		Mockito.when(userRepository.save(user)).thenReturn(user);
+		Assert.assertNotNull(user);
+		Assert.assertNotNull(user.getUserName());
+	}
+
 	@Test
 	public void getAllUserInfoDetails() {
 		String userId = "234";
@@ -60,7 +82,7 @@ public class UserServiceTest {
 	
 	@Test
 	public void getUserByUserIdDetails() {
-		String userId = "444";
+		String userId = "111";
 		User userObj = new User();
 		userObj.setUserId(userId);
 		Mockito.when(userRepository.findByUserId(userId)).thenReturn(userObj);
@@ -68,5 +90,4 @@ public class UserServiceTest {
 		Assert.assertNotNull(userId);
 		Assert.assertNotNull(userObj);
 	}
-	
 }

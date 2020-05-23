@@ -1,11 +1,17 @@
 package com.springboot.rest.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.springboot.rest.dto.UserDto;
 import com.springboot.rest.entity.User;
 
 
 public interface UserRepository extends JpaRepository<User, String>{
+	
 	public User findByUserId(String userId);
+	
+	/* public UserDto saveUser(List<User> list); */
 
 }
