@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class UserDto{
 	
 	@JsonProperty(value = "userId")
-	private String userId=null;
+	private String userId;
 	
 	@JsonProperty(value = "userName")
-	private String userName=null;
+	private String userName;
 
 	public String getUserId() {
 		return userId;

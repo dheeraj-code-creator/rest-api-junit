@@ -24,7 +24,8 @@ public class UserService {
 		User convertedUser = converterService.convertToEntity(userdto);
 		convertedUser.setUserId(userdto.getUserId());
 		convertedUser.setUserName(userdto.getUserName());
-	    return userRepository.save(convertedUser);
+		User savedUser = userRepository.save(convertedUser);
+		return savedUser;
 	}
 	
 	public User updateUser(UserDto userdto, String userId) {
