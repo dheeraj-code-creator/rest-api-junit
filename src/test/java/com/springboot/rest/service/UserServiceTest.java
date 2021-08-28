@@ -60,48 +60,42 @@ public class UserServiceTest {
         Assert.assertNotNull(userService.getUserByUserId(id));
     }
 
+    // Remember: we need to override equals and hashcode method in Entity class, otherwise will get null
     @Test
-    public void testForupdateExistingUser() {
-        String userId = "222";
-        User user = new User();
-        user.setUserId("222");
-        user.setUserName("updated-user-name");
-        Mockito.when(userRepository.findById(userId)).thenReturn(Optional.ofNullable(user));
-        Mockito.when(userRepository.save(user)).thenReturn(user);
-        Assert.assertNotNull(user);
-        Assert.assertNotNull(user.getUserName());
-    }
-
-    @Test
-    public void testForCreateNewUser() {
-        String userId = "111";
-        String userName = "First Demo";
-        User user = new User();
-        user.setUserId(userId);
-        user.setUserName(userName);
-        userRepository.saveAndFlush(user);
-        Assert.assertEquals("111", userId);
-    }
-  /*  @Test
     public void addUserTest() {
         UserDto userDto = new UserDto();
-        userDto.setUserId("123");
-        userDto.setUserName("ABC");
         User user = new User("123","ABC");
+        userDto.setUserId(user.getUserId());
+        userDto.setUserName(user.getUserName());
         Mockito.when(converterService.convertToEntity(userDto)).thenReturn(user);
         Mockito.when(userRepository.save(user)).thenReturn(user);
-        Assert.assertEquals(Objects.equals(user,userService.addUser(userDto)),true);
-
-    }*/
-
-  /*  @Test
-    public void addUserTest(){
-        User user = new User(04, "Jom", 61, "PSA");
-        Mockito.when(userRepository.save(user)).thenReturn(user);
         // we are checking equality of above user and after calling userService.addUser() method
-        Assert.assertEquals(user, userService.addUser(user));
-        Assert.assertNotNull(userService.addUser(user));
-    }*/
+        Assert.assertEquals(user, userService.addUser(userDto));
+        Assert.assertEquals(Objects.equals(user,userService.addUser(userDto)),true);
+        Assert.assertNotNull(userService.addUser(userDto));
+
+    }
+
+    @Test
+    public void updateUserTest(){
+        String id = "111";
+        // userDto: provide updated name to userdto
+        UserDto userDto = new UserDto();
+        userDto.setUserId("111");
+        userDto.setUserName("updated-user-name");
+        // below is existing user
+        User user = new User("111","First Demo");
+        Mockito.when(converterService.convertToEntity(userDto)).thenReturn(new User());
+        // below is mock existing user with existing name because we haven't set and saved yet.
+        Mockito.when(userRepository.findByUserId(id)).thenReturn(user);
+        // updated existing user with new userName
+        user.setUserName(userDto.getUserName());
+        // below will mock existing user with updated name because here we set and saved it
+        Mockito.when(userRepository.save(user)).thenReturn(user);
+        Assert.assertEquals(Objects.equals(user,userService.updateUser(userDto, id)),true);
+        Assert.assertEquals("updated-user-name", userService.updateUser(userDto, id).getUserName());
+        Assert.assertNotNull(userService.updateUser(userDto, id));
+    }
 
    /* @Test
     public void deleteUserTest() {
@@ -109,9 +103,5 @@ public class UserServiceTest {
         userService.deleteUser(user);
         verify(userRepository, times(1)).delete(user);
     }*/
-
-
-
-
 
 }

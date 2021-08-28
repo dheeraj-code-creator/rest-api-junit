@@ -1,10 +1,7 @@
 package com.springboot.rest.controller;
 
-import java.util.Arrays;
 import java.util.List;
 
-import com.springboot.rest.entity.Employee;
-import com.springboot.rest.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

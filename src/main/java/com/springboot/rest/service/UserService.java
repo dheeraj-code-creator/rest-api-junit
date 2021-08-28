@@ -33,6 +33,7 @@ public class UserService {
 		userUpdate = userRepository.findByUserId(userId);
 		userUpdate.setUserName(userdto.getUserName());
 		return userRepository.save(userUpdate);
+
 	}
 
 	public List<UserDto> getAllUserInfo() {
